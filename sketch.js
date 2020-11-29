@@ -8,7 +8,7 @@ var engine, world;
 
 //calling variables
 var stone, stoneImage, stoneGroup;
-var banana, bananaImage, bananaGroup;
+var banana,camera,cameraIMG, bananaImage, bananaGroup;
 var monkey, monkey_running,monkeyIMG;
 var backgroundy, backgroundImage;
 var score= 0;
@@ -20,7 +20,7 @@ function preload(){
 
 //loading animation for monkey
 monkeyIMG= loadImage ("monkey.png");
-
+cameraIMG=loadImage("camera.png");
 //loading images for banana and stones
   bananaImage= loadImage("banana.png");
   stoneImage= loadImage("stone.png");
@@ -39,6 +39,9 @@ function setup() {
   monkey= createSprite (50,390,10,10);
   monkey.addImage(monkeyIMG);
   monkey.scale= 0.1 ;
+  camera= createSprite (50,390,10,10);
+  camera.addImage(cameraIMG);
+ 
 //creating ground sprite
   ground= createSprite (0,390,800,10);
   ground.visible= false;
@@ -62,24 +65,26 @@ function draw() {
 
 //making the monkey jump  
   if (keyDown ("SPACE")&& monkey.y>=320) {
-    monkey.velocityY= -21;  
+    monkey.velocityY= -21; 
+    camera.velocityY=-21;
   }    
   
 //adding gravity to monkey
   monkey.velocityY= monkey.velocityY + 0.6      ;
-
+camera.velocityY= camera.velocityY + 0.6    
 //preventing the monkey from falling off the ground
   monkey.collide (ground);
+  camera.collide (ground);
 
 //scoring system and changing size of the monkey
-  if (bananaGroup.isTouching(monkey)) {
+  if (bananaGroup.isTouching(monkey || camera)) {
     score= score+5;
     bananaGroup.destroyEach();
   }
 
   
 
-  if (stoneGroup.isTouching(monkey)) {
+  if (stoneGroup.isTouching(monkey || camera)) {
     score= 0;
     stoneGroup.destroyEach();
    // monkey.scale= 0.7;
